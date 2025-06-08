@@ -32,7 +32,7 @@ jobs:
     - name: Bump prerelease version with timestamp
       run: |
         TIMESTAMP=$(date +%Y%m%d%H%M%S)
-        npm version prerelease --preid=alpha $TIMESTAMP
+        npm version prerelease $TIMESTAMP --preid alpha
         git push --follow-tags
 
     - name: Publish to NPM
