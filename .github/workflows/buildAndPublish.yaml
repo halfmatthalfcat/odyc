@@ -29,10 +29,9 @@ jobs:
         git config --local user.email "mjo2089@gmail.com"
         git config --local user.name "Matt Oliver"
 
-    - name: Bump prerelease version with timestamp
+    - name: Bump prerelease version
       run: |
-        TIMESTAMP=$(date +%Y%m%d%H%M%S)
-        npm version prerelease $TIMESTAMP --preid alpha
+        npm version prerelease --preid alpha
         git push --follow-tags
 
     - name: Publish to NPM
