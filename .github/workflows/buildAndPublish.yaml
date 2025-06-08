@@ -1,0 +1,41 @@
+name: Build and Publish
+
+on:
+  push:
+    branches: [ halfmatthalfcat ]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: npm run build
+
+    - name: Configure Git
+      run: |
+        git config --local user.email "mjo2089@gmail.com"
+        git config --local user.name "Matt Oliver"
+
+    - name: Bump prerelease version with timestamp
+      run: |
+        TIMESTAMP=$(date +%Y%m%d%H%M%S)
+        npm version prerelease --preid=alpha $TIMESTAMP
+        git push --follow-tags
+
+    - name: Publish to NPM
+      run: npm publish -f
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
