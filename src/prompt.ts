@@ -155,7 +155,7 @@ export class Prompt extends Container {
 	#resizeCanvas = (evt: ResizeEvent) => {
 		const sideSize = Math.min(evt.detail.width, evt.detail.height)
 		const left = (evt.detail.width - sideSize) * 0.5 + evt.detail.left
-		const top = (evt.detail.top - sideSize) * 0.5 + evt.detail.top
+		const top = (evt.detail.height - sideSize) * 0.5 + evt.detail.top
 		this.#canvas.style.setProperty('width', `${sideSize}px`)
 		this.#canvas.style.setProperty('height', `${sideSize}px`)
 		this.#canvas.style.setProperty('left', `${left}px`)
