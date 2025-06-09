@@ -56,10 +56,10 @@ export class MessageBox {
 		this.#textFx = new TextFx('\n', this.#contentColor, this.#configColors)
 
 		this.#resize()
-		
-		window.addEventListener('resize', this.#resize);
 
-		(params.rootElement ?? document.body).append(this.#canvas)
+		window.addEventListener('resize', this.#resize)
+
+		;(params.rootElement ?? document.body).append(this.#canvas)
 	}
 
 	#resize = () => {

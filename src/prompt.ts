@@ -42,9 +42,9 @@ export class Prompt {
 		this.#canvas.height = CANVAS_SIZE
 		this.#canvas.classList.add('odyc-prompt-canvas')
 
-		this.#resizeCanvas();
-		
-		(params.rootElement ?? document.body).append(this.#canvas)
+		this.#resizeCanvas()
+
+		;(params.rootElement ?? document.body).append(this.#canvas)
 
 		window.addEventListener('resize', this.#resizeCanvas)
 	}
