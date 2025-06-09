@@ -68,12 +68,16 @@ export class MessageBox {
 			this.#container.clientWidth,
 			this.#container.clientHeight,
 		)
-		const left = (this.#container.clientWidth - sideSize) * 0.5
-		const top = (this.#container.clientHeight - sideSize) * 0.5
 		this.#canvas.style.setProperty('width', `${sideSize}px`)
 		this.#canvas.style.setProperty('height', `${sideSize}px`)
-		this.#canvas.style.setProperty('left', `${left}px`)
-		this.#canvas.style.setProperty('top', `${top}px`)
+		this.#canvas.style.setProperty(
+			'left',
+			`${this.#container.getBoundingClientRect().left}px`,
+		)
+		this.#canvas.style.setProperty(
+			'top',
+			`${this.#container.getBoundingClientRect().top}px`,
+		)
 	}
 
 	open(text: string | string[]) {
