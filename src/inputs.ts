@@ -1,4 +1,4 @@
-import { Container } from "./container"
+import { Container, Containerable } from "./container"
 
 const TIMEBETWEENKEYS = 200
 const TIMEBETWEENTOUCH = 200
@@ -23,7 +23,7 @@ class InputsHandler extends Container {
 
 	constructor(
 		params: InputsHandlerParams,
-		container: HTMLElement,
+		container: Containerable,
 		onInput: (input: Input) => void,
 	) {
 		super(container)
@@ -41,8 +41,8 @@ class InputsHandler extends Container {
 		touchEventElement.style.setProperty('height', '100%')
 		touchEventElement.style.setProperty('overflow', 'hidden')
 		touchEventElement.style.setProperty('touch-action', 'none')
-		container.appendChild(touchEventElement)
-		container.style.setProperty('margin', '0')
+		this.append(touchEventElement)
+		// container.style.setProperty('margin', '0')
 
 		document.addEventListener('keydown', this.handleKeydown)
 		touchEventElement.addEventListener('pointerdown', this.handleTouch)
@@ -116,6 +116,6 @@ class InputsHandler extends Container {
 
 export const initInputsHandler = (
 	params: InputsHandlerParams,
-	container: HTMLElement,
+	container: Containerable,
 	onInput: (input: Input) => void,
 ) => new InputsHandler(params, container, onInput)

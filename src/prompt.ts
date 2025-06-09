@@ -1,4 +1,4 @@
-import { Container, ResizeEvent } from './container'
+import { Container, Containerable, ResizeEvent } from './container'
 import { DialogParams } from './dialog'
 import { Input } from './inputs'
 import { TextFx } from './lib'
@@ -14,7 +14,7 @@ const FONT_SIZE = 8
 const BOX_OUTLINE = 2
 
 export class Prompt extends Container {
-	#container: HTMLElement
+	#container: Containerable
 	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
 	#resolvePromise?: (index: number) => void
@@ -28,7 +28,7 @@ export class Prompt extends Container {
 	#contentColor: string
 	#borderColor: string
 
-	constructor(params: DialogParams, container: HTMLElement) {
+	constructor(params: DialogParams, container: Containerable) {
 		super(container)
 		this.#container = container
 		this.#configColors = params.colors
@@ -47,7 +47,7 @@ export class Prompt extends Container {
 		this.#canvas.classList.add('odyc-prompt-canvas')
 
 		this.#resizeCanvas(this.makeResizeEvent())
-		this.#container.append(this.#canvas)
+		this.append(this.#canvas)
 		this.addEventListener('resize', this.#resizeCanvas)
 	}
 
@@ -182,5 +182,5 @@ export class Prompt extends Container {
 	}
 }
 
-export const initPrompt = (params: DialogParams, container: HTMLElement) =>
+export const initPrompt = (params: DialogParams, container: Containerable) =>
 	new Prompt(params, container)

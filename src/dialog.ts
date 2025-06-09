@@ -1,4 +1,4 @@
-import { Container, ResizeEvent } from './container'
+import { Container, Containerable, ResizeEvent } from './container'
 import { Char, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
@@ -21,7 +21,7 @@ const FONT_SIZE = 8
 const BOX_OUTLINE = 2
 
 export class Dialog extends Container {
-	#container: HTMLElement
+	#container: Containerable
 	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
 	#resolvePromise?: () => void
@@ -51,7 +51,7 @@ export class Dialog extends Container {
 	#boxX: number
 	#boxY: number
 
-	constructor(params: DialogParams, container: HTMLElement) {
+	constructor(params: DialogParams, container: Containerable) {
 		super(container)
 		this.#container = container
 		this.#configColors = params.colors
@@ -69,7 +69,7 @@ export class Dialog extends Container {
 		this.#canvas.height = CANVAS_SIZE
 		this.#canvas.classList.add('odyc-dialog-canvas')
 
-		this.#container.append(this.#canvas)
+		this.append(this.#canvas)
 
 		this.addEventListener('resize', this.#resizeCanvas)
 
@@ -185,5 +185,5 @@ export class Dialog extends Container {
 	}
 }
 
-export const initDialog = (params: DialogParams, container: HTMLElement) =>
+export const initDialog = (params: DialogParams, container: Containerable) =>
 	new Dialog(params, container)

@@ -1,4 +1,4 @@
-import { Container, ResizeEvent } from './container'
+import { Container, Containerable, ResizeEvent } from './container'
 import { Char, TextFx } from './lib'
 import { RendererParams } from './renderer'
 const ANIMATION_INTERVAL_MS = 30
@@ -10,7 +10,7 @@ export type MessageBoxParams = {
 }
 
 export class MessageBox extends Container {
-	#container: HTMLElement
+	#container: Containerable
 	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
 	isOpen = false
@@ -35,7 +35,7 @@ export class MessageBox extends Container {
 	#paddingX = 1
 	#spaceBetweenLines = 2
 
-	constructor(params: MessageBoxParams, container: HTMLElement) {
+	constructor(params: MessageBoxParams, container: Containerable) {
 		super(container)
 		this.#container = container
 		this.#configColors = params.colors
@@ -62,7 +62,7 @@ export class MessageBox extends Container {
 		this.#resize(this.makeResizeEvent())
 		this.addEventListener('resize', this.#resize)
 
-		this.#container.append(this.#canvas)
+		this.append(this.#canvas)
 	}
 
 	#resize = (evt: ResizeEvent) => {
@@ -146,5 +146,5 @@ export class MessageBox extends Container {
 
 export const initMessageBox = (
 	params: MessageBoxParams,
-	container: HTMLElement,
+	container: Containerable,
 ) => new MessageBox(params, container)

@@ -20,8 +20,9 @@ interface EventMap {
 	resize: ResizeEvent
 }
 
+export type Containerable = Window | HTMLElement
 export abstract class Container extends EventTarget {
-	constructor(private container: Window | HTMLElement) {
+	constructor(private container: Containerable) {
 		super()
 
 		if (container instanceof Window) {
@@ -43,6 +44,14 @@ export abstract class Container extends EventTarget {
 					)
 				}
 			})
+		}
+	}
+
+	protected append(child: HTMLElement): void {
+		if (this.container instanceof Window) {
+			this.container.document.body.append(child)
+		} else {
+			this.container.append(child)
 		}
 	}
 

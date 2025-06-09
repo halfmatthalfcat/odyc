@@ -1,4 +1,4 @@
-import { Container, ResizeEvent } from './container'
+import { Container, Containerable, ResizeEvent } from './container'
 import { createGridFromString } from './lib'
 import { Position, Tile } from './types.js'
 
@@ -20,7 +20,7 @@ export type RendererParams = {
 
 class Renderer extends Container {
 	canvas: HTMLCanvasElement
-	#container: HTMLElement
+	#container: Containerable
 	#zoom = 24
 	screenWidth: number
 	screenHeight: number
@@ -30,7 +30,7 @@ class Renderer extends Container {
 	ctx: CanvasRenderingContext2D
 	background?: string | number
 
-	constructor(options: RendererParams, container: HTMLElement) {
+	constructor(options: RendererParams, container: Containerable) {
 		super(container)
 		this.#container = container
 
@@ -52,7 +52,7 @@ class Renderer extends Container {
 		if (!ctx) throw new Error('failled to access context of the canvas')
 		this.ctx = ctx
 		this.#setSize(this.makeResizeEvent())
-		this.#container.append(this.canvas)
+		this.append(this.canvas)
 
 		this.addEventListener('resize', this.#setSize)
 	}
@@ -148,5 +148,7 @@ class Renderer extends Container {
 	}
 }
 
-export const initRenderer = (options: RendererParams, container: HTMLElement) =>
-	new Renderer(options, container)
+export const initRenderer = (
+	options: RendererParams,
+	container: Containerable,
+) => new Renderer(options, container)

@@ -1,4 +1,4 @@
-import { Container, ResizeEvent } from './container'
+import { Container, Containerable, ResizeEvent } from './container'
 import {
 	FilterParams,
 	getFilterSettings,
@@ -7,7 +7,7 @@ import {
 
 export class Filter extends Container {
 	canvas: HTMLCanvasElement
-	#container: HTMLElement
+	#container: Containerable
 	#settings: ReturnType<typeof getFilterSettings>
 	#uniforms: Uniforms = {}
 	#textureSource: HTMLCanvasElement
@@ -21,7 +21,7 @@ export class Filter extends Container {
 	constructor(
 		target: HTMLCanvasElement,
 		options: FilterParams,
-		container: HTMLElement,
+		container: Containerable,
 	) {
 		super(container)
 		this.#settings = getFilterSettings(options)
@@ -251,7 +251,7 @@ export class Filter extends Container {
 }
 export const initFilter = (
 	target: HTMLCanvasElement,
-	container: HTMLElement,
+	container: Containerable,
 	options?: FilterParams,
 ) => {
 	if (!options) return null
