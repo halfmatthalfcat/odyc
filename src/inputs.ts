@@ -1,3 +1,5 @@
+import { Container } from "./container"
+
 const TIMEBETWEENKEYS = 200
 const TIMEBETWEENTOUCH = 200
 const MINSWIPEDIST = 30
@@ -9,7 +11,7 @@ export type InputsHandlerParams = {
 	autoFocus?: boolean
 }
 
-class InputsHandler {
+class InputsHandler extends Container {
 	controls: [Input, string | string[]][]
 	lastKeysEvents: Map<string, number> = new Map()
 	onInput: (input: Input) => void
@@ -24,6 +26,7 @@ class InputsHandler {
 		container: HTMLElement,
 		onInput: (input: Input) => void,
 	) {
+		super(container)
 		this.controls = Object.entries(params.controls) as [
 			Input,
 			string | string[],

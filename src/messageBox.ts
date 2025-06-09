@@ -1,3 +1,4 @@
+import { Container, ResizeEvent } from './container'
 import { Char, TextFx } from './lib'
 import { RendererParams } from './renderer'
 const ANIMATION_INTERVAL_MS = 30
@@ -8,7 +9,7 @@ export type MessageBoxParams = {
 	rootElement?: HTMLElement
 }
 
-export class MessageBox {
+export class MessageBox extends Container {
 	#container: HTMLElement
 	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
@@ -35,6 +36,7 @@ export class MessageBox {
 	#spaceBetweenLines = 2
 
 	constructor(params: MessageBoxParams, container: HTMLElement) {
+		super(container)
 		this.#container = container
 		this.#configColors = params.colors
 		this.#backgroundColor = this.#getColor(params.messageBackground)
@@ -57,27 +59,20 @@ export class MessageBox {
 		this.#canvas.classList.add('odyc-message-canvas')
 		this.#textFx = new TextFx('\n', this.#contentColor, this.#configColors)
 
-		this.#resize()
-		this.#container.addEventListener('resize', this.#resize)
+		this.#resize(this.makeResizeEvent())
+		this.addEventListener('resize', this.#resize)
 
 		this.#container.append(this.#canvas)
 	}
 
-	#resize = () => {
-		const sideSize = Math.min(
-			this.#container.clientWidth,
-			this.#container.clientHeight,
-		)
+	#resize = (evt: ResizeEvent) => {
+		const sideSize = Math.min(evt.detail.width, evt.detail.height)
+		const left = (evt.detail.width - sideSize) * 0.5 + evt.detail.left
+		const top = (evt.detail.top - sideSize) * 0.5 + evt.detail.top
 		this.#canvas.style.setProperty('width', `${sideSize}px`)
 		this.#canvas.style.setProperty('height', `${sideSize}px`)
-		this.#canvas.style.setProperty(
-			'left',
-			`${this.#container.getBoundingClientRect().left}px`,
-		)
-		this.#canvas.style.setProperty(
-			'top',
-			`${this.#container.getBoundingClientRect().top}px`,
-		)
+		this.#canvas.style.setProperty('left', `${left}px`)
+		this.#canvas.style.setProperty('top', `${top}px`)
 	}
 
 	open(text: string | string[]) {

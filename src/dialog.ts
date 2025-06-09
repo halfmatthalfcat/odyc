@@ -1,3 +1,4 @@
+import { Container, ResizeEvent } from './container'
 import { Char, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
@@ -19,7 +20,7 @@ const PADDING_Y = 12
 const FONT_SIZE = 8
 const BOX_OUTLINE = 2
 
-export class Dialog {
+export class Dialog extends Container {
 	#container: HTMLElement
 	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
@@ -51,6 +52,7 @@ export class Dialog {
 	#boxY: number
 
 	constructor(params: DialogParams, container: HTMLElement) {
+		super(container)
 		this.#container = container
 		this.#configColors = params.colors
 		this.#backgroundColor = this.#getColor(params.dialogBackground)
@@ -67,9 +69,9 @@ export class Dialog {
 		this.#canvas.height = CANVAS_SIZE
 		this.#canvas.classList.add('odyc-dialog-canvas')
 
-		this.#resizeCanvas()
 		this.#container.append(this.#canvas)
-		this.#container.addEventListener('resize', this.#resizeCanvas)
+
+		this.addEventListener('resize', this.#resizeCanvas)
 
 		this.#boxWidth = MAX_CHARS_PER_LINE * 8 + PADDING_X * 2
 		this.#boxHeight =
@@ -143,21 +145,14 @@ export class Dialog {
 		this.#animationId && cancelAnimationFrame(this.#animationId)
 	}
 
-	#resizeCanvas = () => {
-		const sideSize = Math.min(
-			this.#container.clientWidth,
-			this.#container.clientHeight,
-		)
+	#resizeCanvas = (evt: ResizeEvent) => {
+		const sideSize = Math.min(evt.detail.width, evt.detail.height)
+		const left = (evt.detail.width - sideSize) * 0.5 + evt.detail.left
+		const top = (evt.detail.top - sideSize) * 0.5 + evt.detail.top
 		this.#canvas.style.setProperty('width', `${sideSize}px`)
 		this.#canvas.style.setProperty('height', `${sideSize}px`)
-		this.#canvas.style.setProperty(
-			'left',
-			`${this.#container.getBoundingClientRect().left}px`,
-		)
-		this.#canvas.style.setProperty(
-			'top',
-			`${this.#container.getBoundingClientRect().top}px`,
-		)
+		this.#canvas.style.setProperty('left', `${left}px`)
+		this.#canvas.style.setProperty('top', `${top}px`)
 	}
 
 	#render = (time: number) => {

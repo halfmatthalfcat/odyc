@@ -1,3 +1,4 @@
+import { Container, ResizeEvent } from './container'
 import { createGridFromString } from './lib'
 import { Position, Tile } from './types.js'
 
@@ -17,7 +18,7 @@ export type RendererParams = {
 	rootElement?: HTMLElement
 }
 
-class Renderer {
+class Renderer extends Container {
 	canvas: HTMLCanvasElement
 	#container: HTMLElement
 	#zoom = 24
@@ -30,6 +31,7 @@ class Renderer {
 	background?: string | number
 
 	constructor(options: RendererParams, container: HTMLElement) {
+		super(container)
 		this.#container = container
 
 		this.screenWidth = options.screenWidth
@@ -49,36 +51,30 @@ class Renderer {
 		const ctx = this.canvas.getContext('2d')
 		if (!ctx) throw new Error('failled to access context of the canvas')
 		this.ctx = ctx
-		this.#setSize()
+		this.#setSize(this.makeResizeEvent())
 		this.#container.append(this.canvas)
 
-		this.#container.addEventListener('resize', this.#setSize)
+		this.addEventListener('resize', this.#setSize)
 	}
-	#setSize = () => {
+	#setSize = (evt: ResizeEvent) => {
 		const orientation =
 			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
-		const sideSize = Math.min(
-			this.#container.clientWidth,
-			this.#container.clientHeight,
-		)
-		let width =
+		const sideSize = Math.min(evt.detail.width, evt.detail.height)
+		const width =
 			orientation === 'horizontal'
 				? sideSize
 				: (sideSize / this.canvas.height) * this.canvas.width
-		let height =
+		const height =
 			orientation === 'vertical'
 				? sideSize
 				: (sideSize / this.canvas.width) * this.canvas.height
+
+		const left = (evt.detail.width - width) * 0.5 + evt.detail.left
+		const top = (evt.detail.top - height) * 0.5 + evt.detail.top
 		this.canvas.style.setProperty('width', `${width}px`)
 		this.canvas.style.setProperty('height', `${height}px`)
-		this.canvas.style.setProperty(
-			'left',
-			`${this.#container.getBoundingClientRect().left}px`,
-		)
-		this.canvas.style.setProperty(
-			'top',
-			`${this.#container.getBoundingClientRect().top}px`,
-		)
+		this.canvas.style.setProperty('left', `${left}px`)
+		this.canvas.style.setProperty('top', `${top}px`)
 	}
 
 	render(items: Drawable[], cameraPosition: Position) {

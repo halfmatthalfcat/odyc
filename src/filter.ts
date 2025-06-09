@@ -1,10 +1,11 @@
+import { Container, ResizeEvent } from './container'
 import {
 	FilterParams,
 	getFilterSettings,
 	Uniforms,
 } from './shaders/filterSettings'
 
-export class Filter {
+export class Filter extends Container {
 	canvas: HTMLCanvasElement
 	#container: HTMLElement
 	#settings: ReturnType<typeof getFilterSettings>
@@ -22,6 +23,7 @@ export class Filter {
 		options: FilterParams,
 		container: HTMLElement,
 	) {
+		super(container)
 		this.#settings = getFilterSettings(options)
 		this.#container = container
 
@@ -43,7 +45,7 @@ export class Filter {
 		this.canvas.style.setProperty('image-rendering', 'pixelated')
 		this.canvas.classList.add('odyc-filter-canvas')
 
-		this.#container.addEventListener('resize', this.#setSize)
+		this.addEventListener('resize', this.#setSize)
 
 		const gl = this.canvas.getContext('webgl', { preserveDrawingBuffer: true })
 		if (!gl) throw new Error('WebGL not supported')
@@ -67,7 +69,7 @@ export class Filter {
 
 		this.#quad = this.#createQuad()
 		this.#texture = this.#createTexture()
-		this.#setSize()
+		this.#setSize(this.makeResizeEvent())
 		this.#textureSource.after(this.canvas)
 		this.#textureSource.style.setProperty('display', 'none')
 	}
@@ -102,24 +104,21 @@ export class Filter {
 		}
 	}
 
-	#setSize = () => {
+	#setSize = (evt: ResizeEvent) => {
 		const orientation =
 			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
-		const sideSize = Math.min(
-			this.#container.clientWidth,
-			this.#container.clientHeight,
-		)
-		let width =
+		const sideSize = Math.min(evt.detail.width, evt.detail.height)
+		const width =
 			orientation === 'horizontal'
 				? sideSize
 				: (sideSize / this.canvas.height) * this.canvas.width
-		let height =
+		const height =
 			orientation === 'vertical'
 				? sideSize
 				: (sideSize / this.canvas.width) * this.canvas.height
-		const left = (this.#container.clientWidth - width) * 0.5
-		const top = (this.#container.clientHeight - height) * 0.5
 
+		const left = (evt.detail.width - width) * 0.5 + evt.detail.left
+		const top = (evt.detail.top - height) * 0.5 + evt.detail.top
 		this.canvas.style.setProperty('width', `${width}px`)
 		this.canvas.style.setProperty('height', `${height}px`)
 		this.canvas.style.setProperty('left', `${left}px`)

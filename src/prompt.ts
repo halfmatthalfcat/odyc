@@ -1,3 +1,4 @@
+import { Container, ResizeEvent } from './container'
 import { DialogParams } from './dialog'
 import { Input } from './inputs'
 import { TextFx } from './lib'
@@ -12,7 +13,7 @@ const PADDING_Y = 12
 const FONT_SIZE = 8
 const BOX_OUTLINE = 2
 
-export class Prompt {
+export class Prompt extends Container {
 	#container: HTMLElement
 	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
@@ -28,6 +29,7 @@ export class Prompt {
 	#borderColor: string
 
 	constructor(params: DialogParams, container: HTMLElement) {
+		super(container)
 		this.#container = container
 		this.#configColors = params.colors
 		this.#backgroundColor = this.#getColor(params.dialogBackground)
@@ -44,9 +46,9 @@ export class Prompt {
 		this.#canvas.height = CANVAS_SIZE
 		this.#canvas.classList.add('odyc-prompt-canvas')
 
-		this.#resizeCanvas()
+		this.#resizeCanvas(this.makeResizeEvent())
 		this.#container.append(this.#canvas)
-		this.#container.addEventListener('resize', this.#resizeCanvas)
+		this.addEventListener('resize', this.#resizeCanvas)
 	}
 
 	get #rect() {
@@ -150,13 +152,10 @@ export class Prompt {
 		}
 	}
 
-	#resizeCanvas = () => {
-		const sideSize = Math.min(
-			this.#container.clientWidth,
-			this.#container.clientHeight,
-		)
-		const left = (this.#container.clientWidth - sideSize) * 0.5
-		const top = (this.#container.clientHeight - sideSize) * 0.5
+	#resizeCanvas = (evt: ResizeEvent) => {
+		const sideSize = Math.min(evt.detail.width, evt.detail.height)
+		const left = (evt.detail.width - sideSize) * 0.5 + evt.detail.left
+		const top = (evt.detail.top - sideSize) * 0.5 + evt.detail.top
 		this.#canvas.style.setProperty('width', `${sideSize}px`)
 		this.#canvas.style.setProperty('height', `${sideSize}px`)
 		this.#canvas.style.setProperty('left', `${left}px`)
