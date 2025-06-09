@@ -34,7 +34,7 @@ class InputsHandler extends Container {
 		this.onInput = onInput
 
 		const touchEventElement = document.createElement('div')
-		touchEventElement.style.setProperty('position', 'absolute')
+		touchEventElement.style.setProperty('position', 'relative')
 		touchEventElement.style.setProperty('left', '0')
 		touchEventElement.style.setProperty('height', '0')
 		touchEventElement.style.setProperty('width', '100%')
