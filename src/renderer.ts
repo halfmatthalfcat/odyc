@@ -70,7 +70,7 @@ class Renderer extends Container {
 				: (sideSize / this.canvas.width) * this.canvas.height
 
 		const left = (evt.detail.width - width) * 0.5 + evt.detail.left
-		const top = (evt.detail.top - height) * 0.5 + evt.detail.top
+		const top = (evt.detail.height - height) * 0.5 + evt.detail.top
 		this.canvas.style.setProperty('width', `${width}px`)
 		this.canvas.style.setProperty('height', `${height}px`)
 		this.canvas.style.setProperty('left', `${left}px`)
