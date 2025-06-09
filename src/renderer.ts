@@ -69,12 +69,16 @@ class Renderer {
 			orientation === 'vertical'
 				? sideSize
 				: (sideSize / this.canvas.width) * this.canvas.height
-		const left = (this.#container.clientWidth - width) * 0.5
-		const top = (this.#container.clientHeight - height) * 0.5
 		this.canvas.style.setProperty('width', `${width}px`)
 		this.canvas.style.setProperty('height', `${height}px`)
-		this.canvas.style.setProperty('left', `${left}px`)
-		this.canvas.style.setProperty('top', `${top}px`)
+		this.canvas.style.setProperty(
+			'left',
+			`${this.#container.getBoundingClientRect().left}px`,
+		)
+		this.canvas.style.setProperty(
+			'top',
+			`${this.#container.getBoundingClientRect().top}px`,
+		)
 	}
 
 	render(items: Drawable[], cameraPosition: Position) {
