@@ -56,6 +56,7 @@ type CustomFilterSettings = {
 	fragment?: string
 	vertex?: string
 	settings?: Uniforms
+	canvas?: HTMLCanvasElement
 }
 
 export type FilterParams =

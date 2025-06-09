@@ -6,6 +6,7 @@ export type DialogParams = {
 	dialogColor: string | number
 	dialogBorder: string | number
 	colors: RendererParams['colors']
+	rootElement?: HTMLElement
 }
 
 const CANVAS_SIZE = 384
@@ -64,8 +65,8 @@ export class Dialog {
 		this.#canvas.height = CANVAS_SIZE
 		this.#canvas.classList.add('odyc-dialog-canvas')
 
-		this.#resizeCanvas()
-		document.body.append(this.#canvas)
+		this.#resizeCanvas();
+		(params.rootElement ?? document.body).append(this.#canvas)
 		window.addEventListener('resize', this.#resizeCanvas)
 
 		this.#boxWidth = MAX_CHARS_PER_LINE * 8 + PADDING_X * 2

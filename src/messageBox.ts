@@ -5,6 +5,7 @@ export type MessageBoxParams = {
 	messageBackground: string | number
 	messageColor: string | number
 	colors: RendererParams['colors']
+	rootElement?: HTMLElement
 }
 
 export class MessageBox {
@@ -55,9 +56,10 @@ export class MessageBox {
 		this.#textFx = new TextFx('\n', this.#contentColor, this.#configColors)
 
 		this.#resize()
-		window.addEventListener('resize', this.#resize)
+		
+		window.addEventListener('resize', this.#resize);
 
-		document.body.append(this.#canvas)
+		(params.rootElement ?? document.body).append(this.#canvas)
 	}
 
 	#resize = () => {

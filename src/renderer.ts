@@ -14,6 +14,7 @@ export type RendererParams = {
 	screenHeight: number
 	colors: string[]
 	background?: string | number
+	rootElement?: HTMLElement
 }
 
 class Renderer {
@@ -45,8 +46,8 @@ class Renderer {
 		const ctx = this.canvas.getContext('2d')
 		if (!ctx) throw new Error('failled to access context of the canvas')
 		this.ctx = ctx
-		this.#setSize()
-		document.body.append(this.canvas)
+		this.#setSize();
+		(options.rootElement ?? document.body).append(this.canvas)
 
 		window.addEventListener('resize', this.#setSize)
 	}
