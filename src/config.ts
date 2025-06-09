@@ -15,11 +15,11 @@ export type Config<T extends string> = RendererParams &
 	DialogParams & { filter?: FilterParams } & GameStateParams<T> & {
 		title?: string | string[]
 	} & {
-		container: HTMLElement
+		container: HTMLElement | Window
 	}
 
 export const defaultConfig: Config<string> = {
-	container: document.body,
+	container: window,
 	player: {
 		sprite: 0,
 	},
